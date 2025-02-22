@@ -1,0 +1,181 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 1000px;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #0a0a0a;
+}
+
+.greeting {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+  margin-bottom: 0.25rem;
+}
+
+.name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0a0a0a;
+}
+
+/* ── Stats ── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 2px solid #0a0a0a;
+}
+
+.statCard {
+  padding: 1.5rem;
+  border-right: 2px solid #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: background 0.15s;
+}
+
+.statCard:last-child { border-right: none; }
+.statCard:hover { background: #0a0a0a; }
+.statCard:hover .statLabel,
+.statCard:hover .statValue,
+.statCard:hover .statDelta { color: #fff; }
+
+.statLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.statValue {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0a0a0a;
+  line-height: 1;
+}
+
+.statDelta {
+  font-size: 0.78rem;
+  color: #6b6b6b;
+}
+
+/* ── Section ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionHeader h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.viewAll {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b6b6b;
+  text-decoration: underline;
+}
+
+.viewAll:hover { color: #0a0a0a; }
+
+/* ── Table ── */
+.tableWrap {
+  border: 2px solid #0a0a0a;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 2px solid #0a0a0a;
+  background: #f9f9f9;
+}
+
+.table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #2e2e2e;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: #f9f9f9; }
+
+.orderId {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.total {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+/* ── Status badges ── */
+.statusBadge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border: 1.5px solid;
+}
+
+.statusDelivered  { border-color: #0a0a0a; color: #0a0a0a; background: #f0f0f0; }
+.statusShipped    { border-color: #0a0a0a; color: #fff;     background: #0a0a0a; }
+.statusProcessing { border-color: #9a9a9a; color: #4a4a4a; background: #fff; }
+.statusConfirmed  { border-color: #c4c4c4; color: #6b6b6b; background: #fff; }
+.statusPending    { border-color: #c4c4c4; color: #9a9a9a; background: #fff; }
+.statusCancelled  { border-color: #c0392b; color: #c0392b; background: #fff5f5; }
+
+/* ── Actions ── */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .statsGrid { grid-template-columns: 1fr 1fr; }
+  .statCard { border-bottom: 2px solid #0a0a0a; }
+}
