@@ -20,6 +20,23 @@
   --gray-800:    #1c1c1c;
   --gray-900:    #111111;
 
+  /* Brand accent colors */
+  --indigo:      #4f46e5;
+  --indigo-light:#eef2ff;
+  --indigo-dark: #3730a3;
+  --amber:       #f59e0b;
+  --amber-light: #fffbeb;
+  --emerald:     #10b981;
+  --emerald-light:#ecfdf5;
+  --rose:        #f43f5e;
+  --rose-light:  #fff1f2;
+  --sky:         #0ea5e9;
+  --sky-light:   #f0f9ff;
+  --violet:      #8b5cf6;
+  --violet-light:#f5f3ff;
+  --orange:      #f97316;
+  --orange-light:#fff7ed;
+
   --shadow-sm:   4px 4px 0px #0a0a0a;
   --shadow-md:   6px 6px 0px #0a0a0a;
   --shadow-lg:   8px 8px 0px #0a0a0a;

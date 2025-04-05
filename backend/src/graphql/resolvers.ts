@@ -22,7 +22,7 @@ export const resolvers = {
       return ctx.prisma.product.findMany({
         where: {
           ...(args.categoryId && { categoryId: args.categoryId }),
-          ...(args.search && { name: { contains: args.search, mode: 'insensitive' } }),
+          ...(args.search && { name: { contains: args.search } }),
         },
         include: { category: true, store: true },
         take: args.limit ?? 20,

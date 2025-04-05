@@ -1,90 +1,55 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  max-width: 1000px;
-}
+.page { display: flex; flex-direction: column; gap: 1.5rem; max-width: 900px; }
 
-.header {
-  padding-bottom: 1.5rem;
+.header { padding-bottom: 1.5rem; border-bottom: 2px solid #0a0a0a; }
+.header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; }
+.header p  { font-size: 0.85rem; color: #9a9a9a; margin-top: 0.2rem; }
+
+/* ── Tabs ── */
+.tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.tab {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 600;
+  padding: 0.4rem 0.85rem; border: 2px solid #e0e0e0;
+  background: #fff; color: #6b6b6b; cursor: pointer; transition: all 0.1s;
+}
+.tab:hover { border-color: #0a0a0a; color: #0a0a0a; }
+.tabActive { border-width: 2px; font-weight: 700; }
+
+/* ── Order cards ── */
+.list { display: flex; flex-direction: column; gap: 0; border: 2px solid #0a0a0a; box-shadow: 6px 6px 0 #0a0a0a; }
+
+.orderCard {
+  padding: 1.25rem 1.5rem;
   border-bottom: 2px solid #0a0a0a;
+  background: #fff;
+  transition: background 0.1s;
+}
+.orderCard:last-child { border-bottom: none; }
+.orderCard:hover { background: #f9f9f9; }
+
+.orderTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.orderLeft { display: flex; flex-direction: column; gap: 0.2rem; }
+.orderId { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.9rem; color: #0a0a0a; }
+.orderDate { font-size: 0.78rem; color: #9a9a9a; }
+
+.orderRight { display: flex; align-items: center; gap: 1rem; }
+.statusBadge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.25rem 0.6rem; border: 1.5px solid;
+}
+.orderTotal { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; color: #0a0a0a; }
+
+.orderItems { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.itemChip {
+  font-size: 0.72rem; color: #4a4a4a; background: #f0f0f0;
+  padding: 0.2rem 0.55rem; border: 1px solid #e0e0e0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;
 }
 
-.header h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-}
+/* ── States ── */
+.loading { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 4rem; color: #9a9a9a; }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.header p { font-size: 0.85rem; color: #9a9a9a; margin-top: 0.25rem; }
-
-.tableWrap {
-  border: 2px solid #0a0a0a;
-  overflow-x: auto;
-  box-shadow: 6px 6px 0 #0a0a0a;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
-}
-
-.table th {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #9a9a9a;
-  padding: 0.85rem 1.25rem;
-  text-align: left;
-  border-bottom: 2px solid #0a0a0a;
-  background: #f9f9f9;
-  white-space: nowrap;
-}
-
-.table td {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #e0e0e0;
-  color: #2e2e2e;
-  vertical-align: middle;
-}
-
-.table tr:last-child td { border-bottom: none; }
-.table tr:hover td { background: #f9f9f9; }
-
-.orderId {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  color: #0a0a0a;
-}
-
-.date { color: #6b6b6b; font-size: 0.85rem; }
-
-.total {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  color: #0a0a0a;
-}
-
-/* ── Status badges ── */
-.badge {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.6rem;
-  border: 1.5px solid;
-  white-space: nowrap;
-}
-
-.delivered  { border-color: #0a0a0a; background: #0a0a0a; color: #fff; }
-.shipped    { border-color: #0a0a0a; background: #f0f0f0; color: #0a0a0a; }
-.processing { border-color: #9a9a9a; background: #fff;    color: #4a4a4a; }
-.confirmed  { border-color: #c4c4c4; background: #fff;    color: #6b6b6b; }
-.pending    { border-color: #c4c4c4; background: #fff;    color: #9a9a9a; }
-.cancelled  { border-color: #c0392b; background: #fff5f5; color: #c0392b; }
+.empty { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 4rem; border: 2px dashed #c4c4c4; text-align: center; color: #9a9a9a; }
