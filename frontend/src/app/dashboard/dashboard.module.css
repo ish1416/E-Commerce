@@ -1,17 +1,15 @@
-/* Dashboard shell */
 .shell {
   display: grid;
   grid-template-columns: 240px 1fr;
   min-height: 100vh;
-  background: #f9f9f9;
+  background: #f8f7f4;
 }
-
 .main {
   padding: 2.5rem;
   overflow-y: auto;
   min-height: 100vh;
+  background: #f8f7f4;
 }
-
 @media (max-width: 900px) {
   .shell { grid-template-columns: 1fr; }
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   Search, ShoppingCart, Heart, Star, Filter,
@@ -13,17 +14,17 @@ import styles from './products.module.css';
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/graphql';
 
 const CATEGORIES = [
-  { name: 'All',           icon: Package,    color: '#0a0a0a', bg: '#f0f0f0' },
-  { name: 'Electronics',   icon: Zap,        color: '#4f46e5', bg: '#eef2ff' },
-  { name: 'Clothing',      icon: Shirt,      color: '#f43f5e', bg: '#fff1f2' },
-  { name: 'Home & Kitchen',icon: Home,       color: '#f59e0b', bg: '#fffbeb' },
-  { name: 'Sports',        icon: Dumbbell,   color: '#10b981', bg: '#ecfdf5' },
-  { name: 'Books',         icon: BookOpen,   color: '#8b5cf6', bg: '#f5f3ff' },
-  { name: 'Beauty',        icon: Sparkles,   color: '#f97316', bg: '#fff7ed' },
-  { name: 'Toys',          icon: Gamepad2,   color: '#0ea5e9', bg: '#f0f9ff' },
-  { name: 'Automotive',    icon: Car,        color: '#6b6b6b', bg: '#f0f0f0' },
-  { name: 'Footwear',      icon: Footprints, color: '#f43f5e', bg: '#fff1f2' },
-  { name: 'Accessories',   icon: Watch,      color: '#f59e0b', bg: '#fffbeb' },
+  { name: 'All',            icon: Package,    color: '#0f0f0f', bg: '#f2f0ec' },
+  { name: 'Electronics',    icon: Zap,        color: '#4f46e5', bg: '#eef2ff' },
+  { name: 'Clothing',       icon: Shirt,      color: '#e11d48', bg: '#fff1f2' },
+  { name: 'Home & Kitchen', icon: Home,       color: '#d97706', bg: '#fef3c7' },
+  { name: 'Sports',         icon: Dumbbell,   color: '#059669', bg: '#d1fae5' },
+  { name: 'Books',          icon: BookOpen,   color: '#7c3aed', bg: '#ede9fe' },
+  { name: 'Beauty',         icon: Sparkles,   color: '#ea580c', bg: '#ffedd5' },
+  { name: 'Toys',           icon: Gamepad2,   color: '#0284c7', bg: '#e0f2fe' },
+  { name: 'Automotive',     icon: Car,        color: '#4b4b4b', bg: '#f2f0ec' },
+  { name: 'Footwear',       icon: Footprints, color: '#e11d48', bg: '#fff1f2' },
+  { name: 'Accessories',    icon: Watch,      color: '#d97706', bg: '#fef3c7' },
 ];
 
 const LIMIT = 20;
@@ -34,18 +35,19 @@ interface Product {
   description: string;
   price: number;
   stock: number;
+  images: string[];
   category: { id: string; name: string };
   store: { name: string };
 }
 
-async function fetchProducts(search: string, categoryId: string, offset: number): Promise<{ products: Product[]; total: number }> {
+async function fetchProducts(search: string, categoryId: string, offset: number) {
   const res = await fetch(API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       query: `query Products($search: String, $categoryId: String, $limit: Int, $offset: Int) {
         products(search: $search, categoryId: $categoryId, limit: $limit, offset: $offset) {
-          id name description price stock
+          id name description price stock images
           category { id name }
           store { name }
         }
@@ -54,7 +56,7 @@ async function fetchProducts(search: string, categoryId: string, offset: number)
     }),
   });
   const { data } = await res.json();
-  return { products: data?.products ?? [], total: data?.products?.length ?? 0 };
+  return (data?.products ?? []) as Product[];
 }
 
 async function fetchCategories(): Promise<{ id: string; name: string }[]> {
@@ -67,9 +69,16 @@ async function fetchCategories(): Promise<{ id: string; name: string }[]> {
   return data?.categories ?? [];
 }
 
+// stable per-product rating so it doesn't flicker on re-render
+function stableRating(id: string) {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) & 0xffffffff;
+  return (3.5 + (Math.abs(h) % 15) / 10).toFixed(1);
+}
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  const [dbCategories, setDbCategories] = useState<{ id: string; name: string }[]>([]);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [activeCat, setActiveCat] = useState('All');
@@ -79,22 +88,17 @@ export default function ProductsPage() {
   const [cart, setCart] = useState<string[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
 
-  // Debounce search
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(search), 400);
+    const t = setTimeout(() => { setDebouncedSearch(search); setPage(0); }, 400);
     return () => clearTimeout(t);
   }, [search]);
 
-  // Load categories once
-  useEffect(() => {
-    fetchCategories().then(setCategories);
-  }, []);
+  useEffect(() => { fetchCategories().then(setDbCategories); }, []);
 
-  // Load products on filter/page change
   const load = useCallback(async () => {
     setLoading(true);
-    const { products } = await fetchProducts(debouncedSearch, activeCatId, page * LIMIT);
-    setProducts(products);
+    const data = await fetchProducts(debouncedSearch, activeCatId, page * LIMIT);
+    setProducts(data);
     setLoading(false);
   }, [debouncedSearch, activeCatId, page]);
 
@@ -104,16 +108,8 @@ export default function ProductsPage() {
     setActiveCat(name);
     setPage(0);
     if (name === 'All') { setActiveCatId(''); return; }
-    const found = categories.find((c) => c.name === name);
+    const found = dbCategories.find((c) => c.name === name);
     setActiveCatId(found?.id ?? '');
-  }
-
-  function toggleCart(id: string) {
-    setCart((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
-  }
-
-  function toggleWishlist(id: string) {
-    setWishlist((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
   }
 
   const catMeta = (name: string) => CATEGORIES.find((c) => c.name === name) ?? CATEGORIES[0];
@@ -128,8 +124,7 @@ export default function ProductsPage() {
         </div>
         {cart.length > 0 && (
           <Link href="/dashboard/cart" className={`btn btn-primary btn-sm ${styles.cartBtn}`}>
-            <ShoppingCart size={15} />
-            Cart ({cart.length})
+            <ShoppingCart size={15} /> Cart ({cart.length})
           </Link>
         )}
       </div>
@@ -142,7 +137,7 @@ export default function ProductsPage() {
           type="text"
           placeholder="Search 1,000+ products…"
           value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
@@ -204,19 +199,29 @@ export default function ProductsPage() {
             const Icon = meta.icon;
             const inCart = cart.includes(p.id);
             const inWish = wishlist.includes(p.id);
-            const rating = (3.5 + Math.random() * 1.5).toFixed(1);
+            const imgSrc = p.images?.[0] || null;
 
             return (
               <div key={p.id} className={styles.card}>
-                {/* Image area */}
+                {/* Image */}
                 <div className={styles.cardImg} style={{ background: meta.bg }}>
-                  <Icon size={48} color={meta.color} strokeWidth={1.5} />
+                  {imgSrc ? (
+                    <Image
+                      src={imgSrc}
+                      alt={p.name}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className={styles.img}
+                      unoptimized
+                    />
+                  ) : (
+                    <Icon size={48} color={meta.color} strokeWidth={1.5} />
+                  )}
                   <button
                     className={`${styles.wishBtn} ${inWish ? styles.wishActive : ''}`}
-                    onClick={() => toggleWishlist(p.id)}
-                    title="Wishlist"
+                    onClick={() => setWishlist((prev) => prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id])}
                   >
-                    <Heart size={14} fill={inWish ? '#f43f5e' : 'none'} color={inWish ? '#f43f5e' : '#9a9a9a'} />
+                    <Heart size={13} fill={inWish ? '#e11d48' : 'none'} color={inWish ? '#e11d48' : '#8a8a8a'} />
                   </button>
                   {p.stock === 0 && <span className={styles.outOfStock}>Out of stock</span>}
                   {p.stock > 0 && p.stock < 10 && <span className={styles.lowStock}>Only {p.stock} left</span>}
@@ -229,18 +234,19 @@ export default function ProductsPage() {
                       {p.category.name}
                     </span>
                     <span className={styles.rating}>
-                      <Star size={10} fill="#f59e0b" color="#f59e0b" />
-                      {rating}
+                      <Star size={10} fill="#d97706" color="#d97706" />
+                      {stableRating(p.id)}
                     </span>
                   </div>
                   <h4 className={styles.cardName}>{p.name}</h4>
                   <p className={styles.storeName}>{p.store.name}</p>
-
                   <div className={styles.cardFooter}>
-                    <span className={styles.price}>₹{Number(p.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                    <span className={styles.price}>
+                      ₹{Number(p.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    </span>
                     <button
                       className={`${styles.addBtn} ${inCart ? styles.addBtnActive : ''}`}
-                      onClick={() => toggleCart(p.id)}
+                      onClick={() => setCart((prev) => prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id])}
                       disabled={p.stock === 0}
                     >
                       <ShoppingCart size={13} />

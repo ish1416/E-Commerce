@@ -8,6 +8,12 @@ function requireAuth(ctx: Context): string {
 }
 
 export const resolvers = {
+  Product: {
+    images: (parent: { images?: string | null }) => {
+      try { return JSON.parse(parent.images || '[]'); } catch { return []; }
+    },
+  },
+
   Query: {
     me: async (_: unknown, __: unknown, ctx: Context) => {
       const userId = requireAuth(ctx);
