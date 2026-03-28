@@ -219,6 +219,12 @@ a { color: inherit; text-decoration: none; }
   color: var(--gray-600);
 }
 
+/* ── Focus ring ── */
+:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
+}
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--gray-100); }
