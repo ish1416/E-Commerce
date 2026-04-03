@@ -50,7 +50,7 @@
   transition: all 0.1s;
 }
 
-.catBtn:hover { border-color: #0a0a0a; color: #0a0a0a; }
+.catBtn:hover { border-color: #0a0a0a; color: #0a0a0a; box-shadow: 3px 3px 0 #0a0a0a; }
 
 .catActive {
   background: #0a0a0a;
