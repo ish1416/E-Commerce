@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   Search, ShoppingCart, Heart, Star, Filter,
@@ -206,13 +205,11 @@ export default function ProductsPage() {
                 {/* Image */}
                 <div className={styles.cardImg} style={{ background: meta.bg }}>
                   {imgSrc ? (
-                    <Image
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
                       src={imgSrc}
                       alt={p.name}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 25vw"
                       className={styles.img}
-                      unoptimized
                     />
                   ) : (
                     <Icon size={48} color={meta.color} strokeWidth={1.5} />

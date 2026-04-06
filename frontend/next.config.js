@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'picsum.photos' },
-      { protocol: 'https', hostname: 'fastly.picsum.photos' },
-      { protocol: 'https', hostname: 'images.unsplash.com' },
-    ],
+    remotePatterns: [],
+    // local /public/products/* images served directly
   },
 };
 
