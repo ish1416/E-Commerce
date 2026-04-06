@@ -129,6 +129,13 @@
 .addBtn:hover:not(:disabled) { background: #4f46e5; color: #fff; }
 .addBtnActive { background: #4f46e5 !important; color: #fff !important; }
 .addBtn:disabled { opacity: 0.35; cursor: not-allowed; border-color: #e2ddd6; color: #b5b5b5; }
+.addBtnJustAdded { background: #059669 !important; border-color: #059669 !important; color: #fff !important; }
+
+.clearBtn {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: #9a9a9a; cursor: pointer; font-size: 0.8rem; padding: 0.2rem;
+}
+.clearBtn:hover { color: #0f0f0f; }
 
 /* ── States ── */
 .loadingState { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 5rem; color: #8a8a8a; }

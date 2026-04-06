@@ -1,55 +1,120 @@
 .page { display: flex; flex-direction: column; gap: 1.5rem; max-width: 900px; }
 
-.header { padding-bottom: 1.5rem; border-bottom: 2px solid #0a0a0a; }
+.header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding-bottom: 1.5rem; border-bottom: 2px solid #0f0f0f;
+}
 .header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; }
-.header p  { font-size: 0.85rem; color: #9a9a9a; margin-top: 0.2rem; }
+.header p  { font-size: 0.85rem; color: #8a8a8a; margin-top: 0.2rem; }
 
 /* ── Tabs ── */
 .tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .tab {
   display: inline-flex; align-items: center; gap: 0.35rem;
   font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 600;
-  padding: 0.4rem 0.85rem; border: 2px solid #e0e0e0;
+  padding: 0.4rem 0.85rem; border: 2px solid #e2ddd6;
   background: #fff; color: #6b6b6b; cursor: pointer; transition: all 0.1s;
 }
-.tab:hover { border-color: #0a0a0a; color: #0a0a0a; }
-.tabActive { border-width: 2px; font-weight: 700; }
+.tab:hover { border-color: #0f0f0f; color: #0f0f0f; }
+.tabActive { font-weight: 700; }
+.tabCount {
+  background: currentColor; color: #fff;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 0.1rem 0.35rem; border-radius: 999px;
+  opacity: 0.85;
+}
 
-/* ── Order cards ── */
-.list { display: flex; flex-direction: column; gap: 0; border: 2px solid #0a0a0a; box-shadow: 6px 6px 0 #0a0a0a; }
+/* ── Order list ── */
+.list {
+  display: flex; flex-direction: column; gap: 0;
+  border: 2px solid #0f0f0f;
+  box-shadow: 6px 6px 0 #0f0f0f;
+}
 
 .orderCard {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 2px solid #0a0a0a;
   background: #fff;
-  transition: background 0.1s;
+  border-bottom: 2px solid #0f0f0f;
 }
 .orderCard:last-child { border-bottom: none; }
-.orderCard:hover { background: #f9f9f9; }
 
-.orderTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+/* ── Order top row (clickable) ── */
+.orderTop {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.5rem; cursor: pointer;
+  transition: background 0.1s;
+}
+.orderTop:hover { background: #f9f9f9; }
+
 .orderLeft { display: flex; flex-direction: column; gap: 0.2rem; }
-.orderId { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.9rem; color: #0a0a0a; }
-.orderDate { font-size: 0.78rem; color: #9a9a9a; }
+.orderId {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 0.9rem; color: #0f0f0f;
+}
+.orderDate { font-size: 0.78rem; color: #8a8a8a; }
 
 .orderRight { display: flex; align-items: center; gap: 1rem; }
 .statusBadge {
   display: inline-flex; align-items: center; gap: 0.3rem;
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-  padding: 0.25rem 0.6rem; border: 1.5px solid;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 0.25rem 0.6rem; border: 1.5px solid;
+  white-space: nowrap;
 }
-.orderTotal { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; color: #0a0a0a; }
+.orderTotal {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 1rem; color: #0f0f0f;
+}
 
-.orderItems { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-.itemChip {
-  font-size: 0.72rem; color: #4a4a4a; background: #f0f0f0;
-  padding: 0.2rem 0.55rem; border: 1px solid #e0e0e0;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;
+/* ── Item chips ── */
+.orderItems {
+  display: flex; gap: 0.4rem; flex-wrap: wrap;
+  padding: 0 1.5rem 1rem;
 }
+.itemChip {
+  font-size: 0.72rem; color: #4b4b4b; background: #f2f0ec;
+  padding: 0.2rem 0.55rem; border: 1px solid #e2ddd6;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;
+}
+
+/* ── Expanded detail ── */
+.orderDetail {
+  border-top: 2px solid #e2ddd6;
+  background: #f9f9f9;
+}
+
+.detailTable {
+  width: 100%; border-collapse: collapse; font-size: 0.85rem;
+}
+.detailTable th {
+  font-family: 'Space Grotesk', sans-serif; font-size: 0.68rem;
+  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #8a8a8a; padding: 0.75rem 1.5rem; text-align: left;
+  border-bottom: 1px solid #e2ddd6; background: #f2f0ec;
+}
+.detailTable td {
+  padding: 0.75rem 1.5rem; border-bottom: 1px solid #e2ddd6;
+  color: #2e2e2e;
+}
+.detailTable tr:last-child td { border-bottom: none; }
+.detailTable tr:hover td { background: #f2f0ec; }
+
+.detailFooter {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.85rem 1.5rem; border-top: 2px solid #0f0f0f;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+  font-size: 0.9rem; background: #fff;
+}
+.detailTotal { font-size: 1.1rem; font-weight: 700; color: #0f0f0f; }
 
 /* ── States ── */
-.loading { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 4rem; color: #9a9a9a; }
+.loading {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1rem; padding: 4rem; color: #8a8a8a;
+}
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.empty { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 4rem; border: 2px dashed #c4c4c4; text-align: center; color: #9a9a9a; }
+.empty {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1rem; padding: 4rem; border: 2px dashed #e2ddd6;
+  text-align: center; color: #8a8a8a; background: #fff;
+}
