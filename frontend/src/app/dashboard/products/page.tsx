@@ -144,7 +144,15 @@ export default function ProductsPage() {
               <div key={p.id} className={styles.card}>
                 <div className={styles.cardImg} style={{ background: s.bg }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.image} alt={p.name} className={styles.img} />
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className={styles.img}
+                    onError={(e) => {
+                      const t = e.currentTarget;
+                      t.style.display = 'none';
+                    }}
+                  />
                   <button className={`${styles.wishBtn} ${inWish ? styles.wishActive : ''}`} onClick={() => toggleWish(p.id)}>
                     <Heart size={13} fill={inWish ? '#e11d48' : 'none'} color={inWish ? '#e11d48' : '#8a8a8a'} />
                   </button>
