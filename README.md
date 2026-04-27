@@ -84,3 +84,4 @@ Next.js → NextAuth → GraphQL Gateway → Resolvers → Prisma → PostgreSQL
 ---
 
 Built with ♥ by Ishita Singh
+# Deployed via GitHub Actions → ECR → ECS
