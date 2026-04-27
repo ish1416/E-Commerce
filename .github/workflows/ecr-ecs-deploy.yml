@@ -1,0 +1,89 @@
+name: Deploy to ECR and ECS
+
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: 604662468900.dkr.ecr.us-east-1.amazonaws.com
+  BACKEND_IMAGE: shopsmart-backend
+  FRONTEND_IMAGE: shopsmart-frontend
+  ECS_CLUSTER: shopsmart-cluster
+  BACKEND_SERVICE: shopsmart-backend-service
+  FRONTEND_SERVICE: shopsmart-frontend-service
+  BACKEND_TASK_DEF: shopsmart-backend
+  FRONTEND_TASK_DEF: shopsmart-frontend
+
+jobs:
+  deploy:
+    name: Build, Push & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # ── Build & Push Backend ──
+      - name: Build backend Docker image
+        run: |
+          docker build -t $ECR_REGISTRY/$BACKEND_IMAGE:latest \
+                       -t $ECR_REGISTRY/$BACKEND_IMAGE:${{ github.sha }} \
+                       ./backend
+
+      - name: Push backend to ECR
+        run: |
+          docker push $ECR_REGISTRY/$BACKEND_IMAGE:latest
+          docker push $ECR_REGISTRY/$BACKEND_IMAGE:${{ github.sha }}
+
+      # ── Build & Push Frontend ──
+      - name: Build frontend Docker image
+        run: |
+          docker build \
+            --build-arg NEXT_PUBLIC_API_URL=http://34.229.147.34:4000/graphql \
+            --build-arg NEXTAUTH_URL=http://34.229.147.34:3000 \
+            --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
+            -t $ECR_REGISTRY/$FRONTEND_IMAGE:latest \
+            -t $ECR_REGISTRY/$FRONTEND_IMAGE:${{ github.sha }} \
+            ./frontend
+
+      - name: Push frontend to ECR
+        run: |
+          docker push $ECR_REGISTRY/$FRONTEND_IMAGE:latest
+          docker push $ECR_REGISTRY/$FRONTEND_IMAGE:${{ github.sha }}
+
+      # ── Deploy Backend to ECS ──
+      - name: Update backend ECS service
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $BACKEND_SERVICE \
+            --force-new-deployment \
+            --region $AWS_REGION
+
+      # ── Deploy Frontend to ECS ──
+      - name: Update frontend ECS service
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $FRONTEND_SERVICE \
+            --force-new-deployment \
+            --region $AWS_REGION
+
+      - name: Deployment complete
+        run: |
+          echo "✅ Deployed to ECS cluster: $ECS_CLUSTER"
+          echo "   Backend:  $ECR_REGISTRY/$BACKEND_IMAGE:${{ github.sha }}"
+          echo "   Frontend: $ECR_REGISTRY/$FRONTEND_IMAGE:${{ github.sha }}"
