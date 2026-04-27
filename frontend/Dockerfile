@@ -1,7 +1,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 ARG NEXT_PUBLIC_API_URL=http://54.234.218.48:4000/graphql
 ARG NEXTAUTH_URL=http://54.234.218.48:3000
@@ -14,7 +14,7 @@ RUN npm run build
 FROM node:20-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 EXPOSE 3000
