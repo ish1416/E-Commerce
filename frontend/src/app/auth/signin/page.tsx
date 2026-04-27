@@ -23,10 +23,11 @@ export default function SignInPage() {
       redirect: false,
     });
 
-    if (res?.error) {
+    if (res?.error || !res?.ok) {
       setError('Invalid email or password.');
       setLoading(false);
     } else {
+      router.refresh();
       router.push('/dashboard');
     }
   }

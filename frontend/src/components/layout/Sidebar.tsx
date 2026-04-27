@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import { LayoutDashboard, Package, ShoppingBag, ShoppingCart, LogOut, Store } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
 const NAV = [
-  { href: '/dashboard',          label: 'Overview',  icon: '▦' },
-  { href: '/dashboard/products', label: 'Products',  icon: '⊞' },
-  { href: '/dashboard/orders',   label: 'Orders',    icon: '◫' },
-  { href: '/dashboard/cart',     label: 'Cart',      icon: '⊡' },
+  { href: '/dashboard',          label: 'Overview',  Icon: LayoutDashboard },
+  { href: '/dashboard/products', label: 'Products',  Icon: Package },
+  { href: '/dashboard/orders',   label: 'Orders',    Icon: ShoppingBag },
+  { href: '/dashboard/cart',     label: 'Cart',      Icon: ShoppingCart },
 ];
 
 interface Props {
@@ -22,18 +23,20 @@ export function Sidebar({ user }: Props) {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.top}>
-        <Link href="/" className={styles.logo}>SHOPSMART</Link>
+        <Link href="/" className={styles.logoWrap}>
+          <Store size={18} color="#fff" />
+          <span className={styles.logo}>SHOPSMART</span>
+        </Link>
         <nav className={styles.nav}>
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`${styles.navItem} ${path === item.href ? styles.active : ''}`}
-            >
-              <span className={styles.icon}>{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
+          {NAV.map(({ href, label, Icon }) => {
+            const active = path === href;
+            return (
+              <Link key={href} href={href} className={`${styles.navItem} ${active ? styles.active : ''}`}>
+                <Icon size={16} strokeWidth={active ? 2.5 : 1.8} />
+                {label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
@@ -47,10 +50,8 @@ export function Sidebar({ user }: Props) {
             <span className={styles.userEmail}>{user?.email}</span>
           </div>
         </div>
-        <button
-          className={`btn btn-ghost btn-sm ${styles.signOut}`}
-          onClick={() => signOut({ callbackUrl: '/' })}
-        >
+        <button className={styles.signOut} onClick={() => signOut({ callbackUrl: '/' })}>
+          <LogOut size={14} />
           Sign out
         </button>
       </div>

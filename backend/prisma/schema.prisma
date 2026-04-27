@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -51,17 +51,18 @@ model Product {
   description String?
   price       Decimal
   stock       Int      @default(0)
-  images      String[]
+  images      String?  @db.Text
   categoryId  String
   storeId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  category   Category    @relation(fields: [categoryId], references: [id])
-  store      Store       @relation(fields: [storeId], references: [id])
-  cartItems  CartItem[]
-  orderItems OrderItem[]
-  reviews    Review[]
+  category      Category       @relation(fields: [categoryId], references: [id])
+  store         Store          @relation(fields: [storeId], references: [id])
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+  reviews       Review[]
+  wishlistItems WishlistItem[]
 }
 
 model CartItem {
@@ -92,7 +93,7 @@ model Order {
   userId          String
   status          OrderStatus @default(PENDING)
   total           Decimal
-  shippingAddress Json
+  shippingAddress Json     @db.Json
   trackingNumber  String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
@@ -117,7 +118,7 @@ model OrderEvent {
   id        String   @id @default(cuid())
   orderId   String
   event     String
-  payload   Json?
+  payload   Json?    @db.Json
   createdAt DateTime @default(now())
 
   order Order @relation(fields: [orderId], references: [id])

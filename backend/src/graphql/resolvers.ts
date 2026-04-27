@@ -8,6 +8,12 @@ function requireAuth(ctx: Context): string {
 }
 
 export const resolvers = {
+  Product: {
+    images: (parent: { images?: string | null }) => {
+      try { return JSON.parse(parent.images || '[]'); } catch { return []; }
+    },
+  },
+
   Query: {
     me: async (_: unknown, __: unknown, ctx: Context) => {
       const userId = requireAuth(ctx);
@@ -22,7 +28,7 @@ export const resolvers = {
       return ctx.prisma.product.findMany({
         where: {
           ...(args.categoryId && { categoryId: args.categoryId }),
-          ...(args.search && { name: { contains: args.search, mode: 'insensitive' } }),
+          ...(args.search && { name: { contains: args.search } }),
         },
         include: { category: true, store: true },
         take: args.limit ?? 20,
