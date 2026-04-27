@@ -39,8 +39,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://54.234.218.48:4000/graphql
-      NEXTAUTH_URL: http://54.234.218.48:3000
+      NEXT_PUBLIC_API_URL: http://34.229.147.34:4000/graphql
+      NEXTAUTH_URL: http://34.229.147.34:3000
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-shopsmart-nextauth-secret-2026}
     depends_on:
       - backend
