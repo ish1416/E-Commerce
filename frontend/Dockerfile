@@ -13,9 +13,12 @@ RUN mkdir -p public && npm run build
 
 FROM node:20-alpine
 WORKDIR /app
-COPY package*.json ./
-RUN npm install --omit=dev
-COPY --from=builder /app/.next ./.next
+ENV NODE_ENV=production
+ENV NEXTAUTH_SECRET=shopsmart-nextauth-secret-2026
+ENV NEXTAUTH_URL=http://34.229.147.34:3000
+ENV NEXT_PUBLIC_API_URL=http://34.229.147.34:4000/graphql
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 RUN mkdir -p public
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
