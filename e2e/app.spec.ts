@@ -19,7 +19,7 @@ test.describe('Landing page', () => {
     await page.goto('/');
     await page.getByRole('link', { name: /Get started/i }).click();
     await expect(page).toHaveURL('/auth/signup');
-    await expect(page.getByText('Create account')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Create account' })).toBeVisible();
   });
 });
 

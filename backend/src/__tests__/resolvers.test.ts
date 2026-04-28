@@ -29,7 +29,7 @@ const mockPrisma = {
   $transaction: jest.fn(),
 };
 
-function buildServer(userId: string | null = null) {
+function buildServer(_userId: string | null = null) {
   return new ApolloServer({
     typeDefs,
     resolvers,

@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { ShoppingBag, TrendingUp, ShoppingCart, Heart, ArrowRight, Package } from 'lucide-react';
+import { ShoppingBag, TrendingUp, ShoppingCart, ArrowRight, Package } from 'lucide-react';
 import Link from 'next/link';
 import styles from './overview.module.css';
 
