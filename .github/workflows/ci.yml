@@ -22,10 +22,11 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
+        working-directory: .
 
       - name: Run linter
         run: npm run lint
@@ -41,16 +42,17 @@ jobs:
         working-directory: backend
 
     services:
-      postgres:
-        image: postgres:15
+      mysql:
+        image: mysql:8
         env:
-          POSTGRES_USER: shopsmart
-          POSTGRES_PASSWORD: shopsmart
-          POSTGRES_DB: shopsmart_test
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: shopsmart_test
+          MYSQL_USER: shopsmart
+          MYSQL_PASSWORD: shopsmart
         ports:
-          - 5432:5432
+          - 3306:3306
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "mysqladmin ping -h localhost"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -63,10 +65,11 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
+        working-directory: .
 
       - name: Run linter
         run: npm run lint
@@ -74,6 +77,6 @@ jobs:
       - name: Run tests
         run: npm test
         env:
-          DATABASE_URL: postgresql://shopsmart:shopsmart@localhost:5432/shopsmart_test
+          DATABASE_URL: mysql://shopsmart:shopsmart@localhost:3306/shopsmart_test
           JWT_SECRET: test-secret-key
           NODE_ENV: test
